@@ -15,4 +15,6 @@ type H = { a: "b" } & number;
 
 type I = null & { a: "b" }; // type I = never
 
+// 표시 자체는   type J = {} & string 이렇게 되지만,
+// {} 와 string의 교집합은 string이다
 type J = {} & string; // type J = {} & string
