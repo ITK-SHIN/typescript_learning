@@ -119,18 +119,17 @@ const zero = new Person("zero", 28, false);
     name: string;
     age: number;
     married: boolean;
+
+    constructor(name: string, age: number, married: boolean) {
+      this.name = name;
+      this.age = age;
+      this.married = married;
+    }
+
+    sayName() {
+      console.log(this.name);
+    }
+
+    zero = new Person("zero", 28, false);
   }
-
-  constructor(name: string, age: number, married: boolean){
-    this.name = name;
-    this.age = age;
-    this.married = married;
-  } 
-
-  sayName(){
-    console.log(this.name);
-  }
-
-  const zero = new Person('zero', 28, false)
 }
- 
