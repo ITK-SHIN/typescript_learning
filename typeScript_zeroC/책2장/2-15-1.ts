@@ -1,5 +1,6 @@
 // 2.15.1 컨디셔널 타입 분배법칙 p109
 
+/* 1. string |  number 타입이 있는데, 이 타입으로부터 string[] 타입을 얻고 싶은 상황 */
 type Start = string | number;
 type Result = Start extends string ? Start[] : never; // type Result = string[]
 
@@ -43,8 +44,8 @@ type Result = Start extends string ? Start[] : never; // type Result = string[]
 // 따라서 never를 타입 인수로 사용하려면 분배법칙이 일어나는 것을 막아야 한다.
 {
   type IsNever<T> = [T] extends [never] ? true : false;
-  type T = IsNever<never>;
-  type F = IsNever<"never">;
+  type T = IsNever<never>; // type T = true
+  type F = IsNever<"never">; // type F = false
 }
 
 // 위와 같은 이유로 제네릭과 컨디셔널 타입을 같이 사용할 때는 다음 사항을 조심해야 한다.
@@ -54,9 +55,9 @@ type Result = Start extends string ? Start[] : never; // type Result = string[]
     type R<T> = T extends string ? T : T;
     const b: R<T> = a; // Type 'T' is not assignable to type 'R<T>'.
   }
-  // 여기서 문제는 R<T> 타입이 T가 될거라고 생각하는 것
+  // -> 여기서 문제는 R<T> 타입이 T가 될거라고 생각하는 것
   // 타입스크립트는 제네릭이 들어 있는 컨디셔널 타입을 판단할 때 값의 판단을 뒤로 미룬다.
-  // 즉, 변수 b에 매개변수 A를 대입할 때까지도 타입스크립트는 R<T>가 T라는 것을 알지 못한다.
+  // 즉, 변수 b에 매개변수 a를 대입할 때까지도 타입스크립트는 R<T>가 T라는 것을 알지 못한다.
   // 그래서 T를 R<T>에 대입할 수 없다는 에러가 발생하는 것이다.
 }
 
