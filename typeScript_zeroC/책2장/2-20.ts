@@ -13,7 +13,7 @@
 
 // ts
 // js와 주요한 차이점은, 타입스크립트는 name, age, married 같은 멤버를 클래스 내부에 한 번 적어야 한다는 것
-// 멤버의 타입은 생략할 수있다. (ts가 생성자 함수를 통해 알아서 추론한다.)
+// 멤버의 타입은 생략할 수있다. (ts가 생성자 함수를 통해 알아서 추론.)
 
 class Person {
   name: string;
@@ -45,8 +45,10 @@ class Person {
   class Person {
     name: string;
     married: boolean;
+
     constructor(name: string, age: number, married: boolean) {
       this.name = name;
+      this.married = married;
       this.age = age;
     }
   }
@@ -101,7 +103,7 @@ class Person {
 }
 
 // 클래스는 ts에서 값으로 쓰이면서 타입이 되기도 한다.
-// type으로 사용할 때, 클래스의 이름은 클래스 자체의 타입이 아니라 인스턴스의 타입이 된다.
+// ✅ type으로 사용할 때, 클래스의 이름은 클래스 자체의 타입이 아니라 인스턴스의 타입이 된다.
 // 클래스 자체의 타입이 필요하다면 'typeof 클래스이름' 으로 타이핑해야 한다.
 
 const person1: Person = new Person("zero", 28, false);
@@ -114,6 +116,7 @@ class Parent {
   readonly age: number;
   protected married: boolean;
   private value: number;
+
   constructor(name: string, age: number, married: boolean) {
     this.name = name;
     this.age = age;
@@ -122,7 +125,7 @@ class Parent {
   }
 
   changeAge(age: number) {
-    this.age = age;
+    this.age = age; // Cannot assign to 'age' because it is a read-only property.ts(2540)
   }
 }
 
@@ -137,12 +140,226 @@ class Child extends Parent {
   sayMarried() {
     console.log(this.married);
   }
+
   sayValue() {
-    console.log(this.value);
+    console.log(this.value); // Property 'value' is private and only accessible within class 'Parent'.ts(2341)
   }
 }
 
 const child = new Child("zero", 28, false);
 child.name;
-child.married;
-child.value;
+child.married; // Property 'married' is protected and only accessible within class 'Parent' and its subclasses.ts(2445)
+child.value; // Property 'value' is private and only accessible within class 'Parent'.ts(2341)
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ */
+
+/* JS의 private field(#)  과  TS의 private 차이점 */
+class PrivateMember {
+  private priv: string = "priv";
+}
+
+//error: ChildPrivateMember' 클래스가 기본 클래스 'PrivateMember'를 잘못 확장합니다.
+// 유형에는 개인 속성 'priv'에 대한 별도의 선언이 있습니다.ts(2415)
+class ChildPrivateMember extends PrivateMember {
+  private priv: string = "priv";
+}
+
+class PrivateField {
+  #priv: string = "priv";
+  sayPriv() {
+    console.log(this.#priv);
+  }
+}
+
+class ChildPrivateField extends PrivateField {
+  #priv: string = "priv";
+}
+
+{
+  interface Human {
+    name: string;
+    age: number;
+    married: boolean;
+  }
+
+  class Person implements Human {
+    name;
+    protected age;
+    married;
+
+    constructor(name: string, age: number, married: boolean) {
+      this.name = name;
+      this.age = age;
+      this.married = married;
+    }
+  }
+}
+
+/* // class 메서드에 override 수식어가 있는데, 이 수식어를 활용하려면
+// TS Config 메뉴에서 noImplicitOverride 옵션이 체크되어 있어야 한다. */
+class Human {
+  eat() {
+    console.log("냠냠");
+  }
+
+  sleep() {
+    console.log("쿨쿨");
+  }
+}
+
+class Employee extends Human {
+  work() {
+    console.log("끙차");
+  }
+
+  // This member must have an 'override' modifier because it overrides a member in the base class 'Human'.ts(4114)
+  /*   sleep() {
+    console.log("에고고");
+  } */
+
+  override sleap() {
+    console.log("에고고");
+  }
+}
+
+/* 오버로딩 overloading */
+{
+  class Person {
+    name?: string;
+    age?: number;
+    married?: boolean;
+
+    constructor();
+    constructor(name: string, married: boolean);
+    constructor(name: string, age: number, married: boolean);
+    constructor(name?: string, age?: boolean | number, married?: boolean) {
+      if (name) {
+        this.name = name;
+      }
+
+      if (typeof age === "boolean") {
+        this.married = age;
+      } else {
+        this.age = age;
+      }
+
+      if (married) {
+        this.married = married;
+      }
+    }
+  }
+
+  const person1 = new Person();
+  const person2 = new Person("nero", true);
+  const person3 = new Person("zero", 28, false);
+  console.log(person1);
+}
+
+/* 클래스의 속성에도 인덱스 시그니처를 사용할 수 있다. */
+/* static 속성에도 인덱스 시그니처가 가능하여 속성을 자유롭게 추가할 수 있다. */
+class Signature {
+  [propName: string]: string | number | undefined;
+  static [propName: string]: boolean;
+}
+
+const sig = new Signature();
+sig.hello = "world";
+Signature.isGood = true;
+
+/* 클래스나 인터페이스의 메서드에서는 this를 타입으로 사용할 수 있다. */
+{
+  class Person {
+    age: number;
+    married: boolean;
+
+    constructor(age: number, married: boolean) {
+      this.age = age;
+      this.married = married;
+    }
+
+    sayAge() {
+      console.log(this.age);
+    }
+
+    sayMarried(this: Person) {
+      console.log(this.married);
+    }
+
+    sayCallback(callback: (this: this) => void) {
+      callback.call(this);
+    }
+  }
+}
+
+{
+  class A {
+    callbackWithThis(cb: (this: this) => void) {
+      cb.call(this);
+    }
+
+    callbackWithoutThis(cb: () => void) {
+      cb();
+    }
+  }
+
+  new A().callbackWithThis(function () {
+    this;
+  });
+
+  new A().callbackWithoutThis(function () {
+    this;
+  });
+}
+
+/* 인터페이스로 클래스 생성자를 타이핑할 수도 있다. */
+{
+  interface PersonConstructor {
+    new (name: string, age: number): {
+      name: string;
+      age: number;
+    };
+  }
+
+  class Person {
+    name: string;
+    age: number;
+
+    constructor(name: string, age: number) {
+      this.name = name;
+      this.age = age;
+    }
+  }
+
+  function createPerson(ctor: PersonConstructor, name: string, age: number) {
+    return new ctor(name, age);
+  }
+
+  createPerson(Person, "zero", 28);
+}
+
+// 이를 활용해 타입스크립트에서도 생성자 함수를 사용할 수있다.
+//클래스가 있으니 이런식으로 코딩할 필요없음
+{
+  interface PersonInterface {
+    name: string;
+    age: number;
+    married: boolean;
+  }
+
+  function Person(
+    this: PersonInterface,
+    name: string,
+    age: number,
+    married: boolean
+  ) {
+    this.name = name;
+    this.age = age;
+    this.married = married;
+  }
+
+  type PersonType = typeof Person & {
+    new (name: string, age: number, married: boolean): PersonInterface;
+  };
+
+  new (Person as PersonType)("zero", 28, false);
+}

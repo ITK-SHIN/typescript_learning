@@ -1,4 +1,3 @@
-"use strict";
 {
     const obj = { a: "hello", b: "world" };
     const obj1 = obj;
@@ -11,3 +10,4 @@
         },
     };
 }
+export {};

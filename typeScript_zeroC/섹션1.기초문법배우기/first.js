@@ -1,4 +1,3 @@
-"use strict";
 // 구현부 만들기 싫을 떄, -> declare 붙이기
 // declare function forEach<T>(arr: T[], callback: (el: T) => void): void;
 let target = [];
@@ -19,3 +18,4 @@ try {
 catch (error) {
     error.message;
 }
+export {};
