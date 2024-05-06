@@ -7,7 +7,7 @@
 
   /* interface ->  이런 규약을 가지고 있다고 명시해 놓는 계약서 같은 것 */
   /* 규칙 : 1번 or 2번 택1
-  1. inferface 이름 앞에 "I를 붙인다." ex) CoffeeMaker -> ICoffeeMaker
+  1. interface 이름 앞에 "I를 붙인다." ex) CoffeeMaker -> ICoffeeMaker
   2. class 이름 뒤에 "Impl" (Implementation 구현) 을 붙인다. ex) CoffeeMaker -> CoffeeMakerImpl
    */
   interface CoffeeMaker {
