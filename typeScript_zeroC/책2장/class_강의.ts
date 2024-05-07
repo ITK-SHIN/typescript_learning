@@ -23,3 +23,5 @@ class B implements A {
 }
 
 class C extends B {}
+
+Array

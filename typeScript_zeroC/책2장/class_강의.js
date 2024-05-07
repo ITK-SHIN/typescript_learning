@@ -7,6 +7,7 @@
         method() { }
     }
 }
+// class 모양을 interface로 통제할 수 있다.
 class B {
     constructor() {
         this.a = "123";
@@ -15,4 +16,5 @@ class B {
 }
 class C extends B {
 }
+Array;
 export {};
