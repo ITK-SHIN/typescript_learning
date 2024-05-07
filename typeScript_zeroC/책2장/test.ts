@@ -30,3 +30,12 @@
 
   console.log(person3);
 }
+
+type R<T> = T extends string ? true : false;
+type RR = R<never>; // type RR = never
+
+{
+  type IsNever<T> = [T] extends [never] ? true : false;
+  type T = IsNever<never>; // type T = true
+  type F = IsNever<"never">; // type F = false
+}
