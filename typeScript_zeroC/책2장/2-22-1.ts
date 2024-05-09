@@ -1,11 +1,10 @@
 // 2.22 : infer로 타입스크립트의 추론을 직접 활용하자
 
 // 배열이 있을 때 배열의 요소 타입을 얻어내고 싶은 상황
+//1. ts에 추론을 맡기고 싶은 부분을 'infer 타입_변수' 로 표시하면 된다.
 type El<T> = T extends (infer E)[] ? E : never;
 type Str = El<string[]>;
 type NumOrBool = El<(number | boolean)[]>;
-
-//1. ts에 추론을 맡기고 싶은 부분을 'infer 타입_변수' 로 표시하면 된다.
 
 // 2. 컨디셔널 타입에서 타입 변수는 참 부분에서만 쓸 수 있다.
 // 거짓부분에서 사용하려고 하면 에러 발생
@@ -15,36 +14,40 @@ type NumOrBool = El<(number | boolean)[]>;
 
 // 3. ts는 많은 부분을 스스로 추론할 수 있다. 추론하려는 부분을  infer로 만들면 된다.
 
-// 매개변수 추론
+// 3-1. 매개변수 추론
 type MyParameters<T> = T extends (...args: infer P) => any ? P : never;
 
-// 생성자 매개변수 추론
+type P = MyParameters<(a: string, b: number) => string>;
+
+// 3-2. 생성자 매개변수 추론
 type MyConstructorParameters<T> = T extends abstract new (
   ...args: infer P
 ) => any
   ? P
   : never;
 
-// 반환값 추론
+type CP = MyConstructorParameters<new (a: string, b: number) => {}>;
+
+// 3-3. 반환값 추론
 type MyReturnType<T> = T extends (...args: any) => infer R ? R : any;
 
-// 인스턴스 타입 추론
+type R = MyReturnType<(a: string, b: number) => string>;
+
+// 3-4. 인스턴스 타입 추론
 type MyInstanceType<T> = T extends abstract new (...args: any) => infer R
   ? R
   : any;
 
-type P = MyParameters<(a: string, b: number) => string>;
-
-type CP = MyConstructorParameters<new (a: string, b: number) => {}>;
-
-type R = MyReturnType<(a: string, b: number) => string>;
-
 type I = MyInstanceType<new (a: string, b: number) => {}>;
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 
 // 4. 서로 다른 타입 변수를 여러 개 동시에 사용할 수도 있다.
 type MyPAndR<T> = T extends (...args: infer P) => infer R ? [P, R] : never;
 
 type PR = MyPAndR<(a: string, b: number) => string>;
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ */
 
 //5. 같은 타입 변수를 여러 곳에 사용할 수도 있다.
 type Union<T> = T extends { a: infer U; b: infer U } ? U : never;
