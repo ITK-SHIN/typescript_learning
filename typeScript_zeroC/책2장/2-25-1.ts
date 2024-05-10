@@ -21,10 +21,21 @@ type ID = `${City}:${Vehicle}`;
 const id: ID = "seoul:walk";
 
 //3. 좌우 공백이 있는 문자열 타입에서 공백 제거하기
-type RemoveX<Str> = Str extends `x${infer Rest}`
-  ? RemoveX<Rest>
-  : Str extends `${infer Rest}x`
-  ? RemoveX<Rest>
+// 'xxtestxx' -> 'test'
+{
+  type RemoveX<Str> = Str extends `x${infer Rest}`
+    ? RemoveX<Rest>
+    : Str extends `${infer Rest}x`
+    ? RemoveX<Rest>
+    : Str;
+
+  type Removed = RemoveX<"xxtestxx">; // type Removed = "test"
+}
+//양쪽 공백을 지우는 함수 (RemoveX 응용)
+type RemoveEmpty<Str> = Str extends ` ${infer Rest}`
+  ? RemoveEmpty<Rest>
+  : Str extends `${infer Rest} `
+  ? RemoveEmpty<Rest>
   : Str;
 
-type Removed = RemoveX<"xxtestxx">;
+type Removed = RemoveEmpty<" test ">;
