@@ -67,3 +67,16 @@ const example2: Example = obj;
 
   console.log(nested);
 }
+
+//✅ - 수식어 : 수식어가 제거된 채로 속성을 가져온다.
+{
+  interface Original {
+    readonly name?: string;
+    readonly age?: number;
+    readonly married?: boolean;
+  }
+
+  type Copy = {
+    -readonly [key in keyof Original]-?: Original[key];
+  };
+}
