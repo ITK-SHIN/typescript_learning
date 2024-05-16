@@ -49,6 +49,8 @@ type Result6 = MyPick2<{ a: string; b: number; c: number }, "a" | "c" | "d">;
 type Result6_1 = MyPick2<{ a: string; b: number; c: number }, "d">;
 const result6: Result6_1 = { a: "이게되네?", b: true };
 
+// S extends keyof any => S 는 string | number | symbol
+
 // ✅ Record : 모든 속성의 타입이 동일한 객체 타입
 type MyRecord<K extends keyof any, T> = {
   [P in K]: T;
